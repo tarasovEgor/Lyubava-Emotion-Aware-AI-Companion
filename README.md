@@ -10,7 +10,7 @@
   <strong>A safe AI companion with emotional awareness, adaptive tone, and a warm personality.</strong>
 </p> -->
 
----
+<!-- --- -->
 
 ## ✨ Overview
 
