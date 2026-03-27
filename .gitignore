@@ -1,0 +1,119 @@
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Node.js / Frontend
+# =========================
+node_modules/
+.pnpm-store/
+.next/
+out/
+dist/
+build/
+coverage/
+.vercel/
+.cache/
+*.tsbuildinfo
+
+# =========================
+# Python / Backend
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.python-version
+.venv/
+venv/
+env/
+ENV/
+pip-wheel-metadata/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+coverage.xml
+htmlcov/
+
+# =========================
+# Jupyter / notebooks
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Databases / local storage
+# =========================
+*.sqlite
+*.sqlite3
+*.db
+
+# =========================
+# AI / ML artifacts
+# =========================
+checkpoints/
+models/
+artifacts/
+runs/
+wandb/
+mlruns/
+
+# =========================
+# Uploaded / generated files
+# =========================
+uploads/
+tmp/
+temp/
+
+# =========================
+# Build / compiled files
+# =========================
+*.o
+*.so
+*.dll
+*.exe
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+
+# =========================
+# Secrets / keys
+# =========================
+*.pem
+*.key
+*.crt
+secrets.json
+
+# =========================
+# Misc
+# =========================
+*.bak
+*.tmp
