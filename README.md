@@ -1,17 +1,5 @@
 # Lyubava — Emotion-Aware AI Companion
 
-<!-- <p align="center">
-  <img src="https://img.shields.io/badge/AI-Emotion%20Aware-6C63FF?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Companion-Safe%20by%20Design-FF7AA2?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Status-In%20Development-00C2A8?style=for-the-badge" />
-</p>
-
-<p align="center">
-  <strong>A safe AI companion with emotional awareness, adaptive tone, and a warm personality.</strong>
-</p> -->
-
-<!-- --- -->
-
 ## ✨ Overview
 
 **Lyubava** is an emotion-aware AI companion designed to make conversations feel more human, supportive, and emotionally intelligent.
