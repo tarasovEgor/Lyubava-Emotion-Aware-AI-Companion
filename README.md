@@ -8,9 +8,6 @@ It analyzes the tone of user messages, estimates the user's emotional state, and
 
 Unlike generic assistants, Lyubava also maintains an internal **mood model** that can evolve through conversation history, creating a stronger sense of continuity, personality, and warmth.
 
-> Lyubava is **not** an adult chatbot.  
-> It is built as a **safe, respectful, non-explicit companion assistant**.
-
 ---
 
 ## 🌸 Core Idea
