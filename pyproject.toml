@@ -1,0 +1,19 @@
+[project]
+name = "project"
+version = "0.1.0"
+description = "MLOps starter"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+project = "lyubava.cli:main"
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]
