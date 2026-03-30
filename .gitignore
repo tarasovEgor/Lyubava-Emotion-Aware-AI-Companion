@@ -78,7 +78,6 @@ htmlcov/
 # AI / ML artifacts
 # =========================
 checkpoints/
-models/
 artifacts/
 runs/
 wandb/
