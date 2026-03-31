@@ -1,0 +1,9 @@
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = gdrive://1eVAyvz9KtlxOZF_RUUmOKoF_LdXFllyi
+    gdrive_use_service_account = false
+    gdrive_acknowledge_abuse = true
+['remote "origin"']
+    url = s3://dvc
+    endpointurl = https://dagshub.com/ekurmanaliev50/Lyubava.s3

@@ -4,7 +4,13 @@ version = "0.1.0"
 description = "MLOps starter"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "datasets>=4.8.4",
+    "dvc-gdrive>=3.0.1",
+    "dvc-s3>=3.3.0",
+    "dvc[gdrive]>=3.67.1",
+    "pandas>=3.0.1",
+]
 
 [project.scripts]
 project = "lyubava.cli:main"
