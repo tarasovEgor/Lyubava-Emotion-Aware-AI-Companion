@@ -8,6 +8,8 @@ Thumbs.db
 *.swp
 *.swo
 
+/src/lyubava/models
+
 # =========================
 # Logs
 # =========================
