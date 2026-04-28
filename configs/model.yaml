@@ -1,0 +1,21 @@
+model_name: distilbert-base-uncased
+
+data:
+  processed_dir: data/processed/empathicdialogues
+  train_file: train.csv
+  valid_file: valid.csv
+  test_file: test.csv
+  labels_file: labels.json
+
+training:
+  output_dir: models/emotion_classifier
+  max_length: 128
+  learning_rate: 0.00002
+  train_batch_size: 16
+  eval_batch_size: 16
+  num_train_epochs: 3
+  weight_decay: 0.01
+  seed: 42
+
+evaluation:
+  reports_dir: reports/evaluation
