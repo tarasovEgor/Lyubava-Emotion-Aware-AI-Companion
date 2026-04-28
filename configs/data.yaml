@@ -1,0 +1,11 @@
+raw_dir: src/lyubava/raw
+processed_dir: data/processed/empatheticdialogues
+
+splits:
+  train: train.csv
+  valid: valid.csv
+  test: test.csv
+
+text_column: utterance
+source_label_column: context
+target_label_column: emotion
