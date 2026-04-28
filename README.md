@@ -59,15 +59,31 @@ The system can remember selected non-sensitive information such as:
 
 ## 📁 Suggested Project Structure
 
-    lyubava/
-    ├── app/                    # Frontend or chat interface
-    ├── backend/                # API, orchestration, business logic
-    ├── emotion/                # Emotion and sentiment analysis modules
-    ├── mood_engine/            # Internal mood state logic
-    ├── memory/                 # User preference and conversation memory
-    ├── prompts/                # System prompts and style definitions
-    ├── safety/                 # Content boundaries and guardrails
-    ├── docs/                   # Product and technical documentation
-    └── README.md
+    src/
+└── lyubava/
+    ├── raw/
+    │   ├── train.csv
+    │   ├── valid.csv
+    │   └── test.csv
+    ├── data/
+    │   ├── emotions.py
+    │   └── prepare.py
+    ├── models/
+    │   ├── train.py
+    │   ├── evaluate.py
+    │   └── predict.py
+    ├── api/
+    │   ├── schemas.py
+    │   └── main.py
+    ├── companion/
+    ├── monitoring/
+    └── utils/
+
+scripts/
+├── prepare_data.py
+├── run_emotion_pipeline.py
+├── evaluate_model.py
+├── smoke_predict.py
+└── run_api.py   # optional local convenience only, not needed for Docker
 
 ---
