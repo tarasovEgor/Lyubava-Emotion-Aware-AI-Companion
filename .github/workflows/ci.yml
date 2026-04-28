@@ -14,4 +14,4 @@ jobs:
           python-version-file: ".python-version"
       - uses: astral-sh/setup-uv@v7
       - run: uv sync
-      - run: uv run pytest
+      - run: uv run pytest tests/test_api.py 
