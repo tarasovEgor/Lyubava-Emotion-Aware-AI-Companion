@@ -1,0 +1,50 @@
+{
+  "train": {
+    "input_path": "src/lyubava/raw/train.csv",
+    "raw_rows": 76668,
+    "processed_rows": 74181,
+    "dropped_rows": 2487,
+    "label_distribution": {
+      "joy": 19789,
+      "anger": 12552,
+      "sadness": 12035,
+      "fear": 9275,
+      "love": 7563,
+      "guilt": 6630,
+      "surprise": 6337
+    },
+    "output_path": "data/processed/empatheticdialogues/train.csv"
+  },
+  "validation": {
+    "input_path": "src/lyubava/raw/valid.csv",
+    "raw_rows": 6318,
+    "processed_rows": 6146,
+    "dropped_rows": 172,
+    "label_distribution": {
+      "joy": 1591,
+      "anger": 1046,
+      "sadness": 1014,
+      "fear": 754,
+      "love": 636,
+      "surprise": 567,
+      "guilt": 538
+    },
+    "output_path": "data/processed/empatheticdialogues/validation.csv"
+  },
+  "test": {
+    "input_path": "src/lyubava/raw/test.csv",
+    "raw_rows": 5701,
+    "processed_rows": 5480,
+    "dropped_rows": 221,
+    "label_distribution": {
+      "joy": 1466,
+      "anger": 905,
+      "sadness": 875,
+      "fear": 648,
+      "love": 646,
+      "guilt": 471,
+      "surprise": 469
+    },
+    "output_path": "data/processed/empatheticdialogues/test.csv"
+  }
+}
