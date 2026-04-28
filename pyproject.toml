@@ -10,10 +10,12 @@ dependencies = [
     "dvc-s3>=3.3.0",
     "dvc[gdrive]>=3.67.1",
     "evaluate>=0.4.6",
+    "fastapi>=0.136.1",
     "numpy>=2.4.4",
     "pandas>=3.0.1",
     "scikit-learn>=1.8.0",
     "transformers[torch]>=5.5.4",
+    "uvicorn[standard]>=0.46.0",
 ]
 
 [project.scripts]
@@ -25,5 +27,6 @@ build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
     "pytest>=9.0.2",
 ]
