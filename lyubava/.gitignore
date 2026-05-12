@@ -7,8 +7,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
-/lyubava/data/
-/lyubava/src/lyubava/models/
+
 /src/lyubava/models
 
 # =========================
