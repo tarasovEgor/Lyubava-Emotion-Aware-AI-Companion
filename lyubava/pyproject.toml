@@ -9,7 +9,11 @@ dependencies = [
     "dvc-gdrive>=3.0.1",
     "dvc-s3>=3.3.0",
     "dvc[gdrive]>=3.67.1",
+    "evaluate>=0.4.6",
+    "numpy>=2.4.4",
     "pandas>=3.0.1",
+    "scikit-learn>=1.8.0",
+    "transformers[torch]>=5.5.4",
 ]
 
 [project.scripts]
