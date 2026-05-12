@@ -9,7 +9,7 @@ Thumbs.db
 *.swo
 /lyubava/data/
 /lyubava/src/lyubava/models/
-/src/lyubava/models
+# /src/lyubava/models
 
 # =========================
 # Logs
@@ -118,4 +118,4 @@ secrets.json
 # =========================
 *.bak
 *.tmp
-/data
+# /data
