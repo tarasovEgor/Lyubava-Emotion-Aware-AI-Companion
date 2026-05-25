@@ -12,7 +12,3 @@ class EmotionRequest(BaseModel):
 class EmotionResponse(BaseModel):
     emotion: str
     confidence: float = Field(..., ge=0.0, le=1.0)
-
-
-class HealthResponse(BaseModel):
-    status: str

@@ -1,4 +1,4 @@
-import { apiClient } from '@/api/client'
+import { API_V1_PREFIX, apiClient } from '@/api/client'
 import type {
   ChatHistory,
   ChatMessage,
@@ -41,13 +41,13 @@ async function sendMessageMock(
 ): Promise<SendMessageResponse> {
   await delay(500)
 
-  const sessionId = payload.session_id ?? crypto.randomUUID()
+  const sessionId = payload.session_id
   const messages = getMockMessages(sessionId)
 
   const userMessage: ChatMessage = {
     id: crypto.randomUUID(),
     role: 'user',
-    content: payload.content,
+    content: payload.message,
     created_at: new Date().toISOString(),
   }
 
@@ -73,9 +73,12 @@ export async function getMessages(sessionId: string): Promise<ChatHistory> {
     return getMessagesMock(sessionId)
   }
 
-  const { data } = await apiClient.get<ChatHistory>('/chat/messages', {
+  const { data } = await apiClient.get<ChatHistory>(
+    `${API_V1_PREFIX}/chat/messages`,
+    {
     params: { session_id: sessionId },
-  })
+    },
+  )
   return data
 }
 
@@ -86,9 +89,27 @@ export async function sendMessage(
     return sendMessageMock(payload)
   }
 
-  const { data } = await apiClient.post<SendMessageResponse>(
-    '/chat/messages',
-    payload,
-  )
-  return data
+  const { data } = await apiClient.post<{
+    reply: string
+  }>(`${API_V1_PREFIX}/chat`, {
+    session_id: payload.session_id,
+    message: payload.message,
+  })
+
+  const now = new Date().toISOString()
+  return {
+    session_id: payload.session_id,
+    user_message: {
+      id: crypto.randomUUID(),
+      role: 'user',
+      content: payload.message,
+      created_at: now,
+    },
+    assistant_message: {
+      id: crypto.randomUUID(),
+      role: 'assistant',
+      content: data.reply,
+      created_at: now,
+    },
+  }
 }

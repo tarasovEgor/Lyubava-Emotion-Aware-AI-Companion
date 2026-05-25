@@ -13,8 +13,8 @@ export interface ChatHistory {
 }
 
 export interface SendMessageRequest {
-  session_id?: string
-  content: string
+  session_id: string
+  message: string
 }
 
 export interface SendMessageResponse {

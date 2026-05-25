@@ -1,20 +1,22 @@
 import { useEffect, useRef } from 'react'
 
 import type { ChatMessage } from '@/api/types'
+import { ChatLoader } from '@/components/chat/ChatLoader'
 import { MessageBubble } from '@/components/chat/MessageBubble'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface MessageListProps {
   messages: ChatMessage[]
   isLoading?: boolean
+  isSending?: boolean
 }
 
-export function MessageList({ messages, isLoading }: MessageListProps) {
+export function MessageList({ messages, isLoading, isSending }: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, isLoading])
+  }, [messages, isLoading, isSending])
 
   if (isLoading) {
     return (
@@ -30,6 +32,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
         {messages.map((message) => (
           <MessageBubble key={message.id} message={message} />
         ))}
+        {isSending && <ChatLoader />}
         <div ref={bottomRef} />
       </div>
     </ScrollArea>

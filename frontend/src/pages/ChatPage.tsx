@@ -30,7 +30,11 @@ export function ChatPage() {
         </p>
       )}
 
-      <MessageList messages={messages} isLoading={isLoading} />
+      <MessageList
+        messages={messages}
+        isLoading={isLoading}
+        isSending={isSending}
+      />
 
       <ChatInput onSend={sendMessage} disabled={isSending || isLoading} />
     </div>
