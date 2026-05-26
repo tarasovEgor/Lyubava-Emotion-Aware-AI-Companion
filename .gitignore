@@ -8,7 +8,8 @@ Thumbs.db
 *.swp
 *.swo
 
-# /src/lyubava/models
+# Track model artifacts with DVC instead of Git
+/models/
 
 # =========================
 # Logs
@@ -118,3 +119,4 @@ secrets.json
 *.bak
 *.tmp
 # /data
+/models
