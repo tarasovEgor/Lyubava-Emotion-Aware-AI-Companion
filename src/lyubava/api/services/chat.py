@@ -7,7 +7,6 @@ from lyubava.api.services.llm import LLMReply, LLMService
 from lyubava.core.errors import BadRequestError, UpstreamServiceError
 from lyubava.models.predict import EmotionPredictor
 
-
 MAX_HISTORY_MESSAGES = 20
 
 
@@ -32,7 +31,9 @@ class ChatService:
 
         emotion_result = self.predictor.predict(message)
         history = self.history_repository.get(session_id)
-        llm_context = [(item.role.value, item.content) for item in history[-MAX_HISTORY_MESSAGES:]]
+        llm_context = [
+            (item.role.value, item.content) for item in history[-MAX_HISTORY_MESSAGES:]
+        ]
 
         system_prompt = self._build_system_prompt(
             emotion=emotion_result["emotion"],

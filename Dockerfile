@@ -6,21 +6,27 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app/src
 ENV MODEL_DIR=/app/models/emotion_classifier
+ENV PATH="/app/.venv/bin:$PATH"
 
 # run as non-root.
 RUN useradd --create-home --shell /bin/bash appuser
 
 # Copy package metadata and source.
-COPY pyproject.toml ./
+COPY pyproject.toml uv.lock ./
 COPY src ./src
 
-# Install the application package and dependencies.
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir .
+# Install CPU PyTorch for local Docker deployments.
+RUN pip install --no-cache-dir uv \
+    && UV_INDEX_STRATEGY=unsafe-best-match \
+       UV_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cpu \
+       uv sync --frozen --no-dev --no-install-package torch \
+    && UV_INDEX_STRATEGY=unsafe-best-match \
+       uv pip install "torch>=2.6.0" --index-url https://download.pytorch.org/whl/cpu
 
-# Copy trained model artifact for local Docker testing.
-# In future CI/CD, this should come from DVC, MLflow, object storage, or a model registry.
+# Copy trained or stub model artifact for local Docker testing.
 COPY models/emotion_classifier ./models/emotion_classifier
+
+RUN chown -R appuser:appuser /app
 
 USER appuser
 

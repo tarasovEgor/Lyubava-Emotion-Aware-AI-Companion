@@ -68,7 +68,9 @@ class OpenRouterLLMClient:
     def _normalize_usage(usage: Any) -> dict[str, int] | None:
         if not isinstance(usage, dict):
             return None
-        normalized = {key: value for key, value in usage.items() if isinstance(value, int)}
+        normalized = {
+            key: value for key, value in usage.items() if isinstance(value, int)
+        }
         return normalized or None
 
     @staticmethod
@@ -79,6 +81,6 @@ class OpenRouterLLMClient:
             return None
         normalized: dict[str, str | int | float | bool | None] = {}
         for key, value in metadata.items():
-            if isinstance(value, (str, int, float, bool)) or value is None:
+            if isinstance(value, str | int | float | bool) or value is None:
                 normalized[key] = value
         return normalized or None

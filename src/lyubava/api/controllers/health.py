@@ -6,7 +6,6 @@ from lyubava.api.dependencies import get_predictor
 from lyubava.api.schemas import HealthResponse
 from lyubava.models.predict import EmotionPredictor
 
-
 router = APIRouter(tags=["health"])
 
 

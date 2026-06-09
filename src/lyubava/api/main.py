@@ -9,6 +9,7 @@ from lyubava.core.lifecycle import create_lifespan
 
 load_dotenv()
 
+
 def create_app() -> FastAPI:
     settings = Settings.from_env()
     app = FastAPI(

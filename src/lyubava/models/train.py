@@ -18,7 +18,6 @@ from transformers import (
     set_seed,
 )
 
-
 REQUIRED_COLUMNS = {"text", "emotion", "label"}
 
 
@@ -106,7 +105,9 @@ def compute_metrics(eval_pred: tuple[np.ndarray, np.ndarray]) -> dict[str, float
     return {
         "accuracy": accuracy_score(labels, predictions),
         "macro_f1": f1_score(labels, predictions, average="macro", zero_division=0),
-        "weighted_f1": f1_score(labels, predictions, average="weighted", zero_division=0),
+        "weighted_f1": f1_score(
+            labels, predictions, average="weighted", zero_division=0
+        ),
     }
 
 

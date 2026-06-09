@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Protocol
 from uuid import uuid4
@@ -45,5 +45,5 @@ def build_chat_message(role: MessageRole, content: str) -> ChatMessage:
         id=str(uuid4()),
         role=role,
         content=content,
-        created_at=datetime.now(timezone.utc).isoformat(),
+        created_at=datetime.now(UTC).isoformat(),
     )

@@ -59,6 +59,7 @@ pip-wheel-metadata/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+tests/fixtures/processed/
 .tox/
 .coverage
 coverage.xml

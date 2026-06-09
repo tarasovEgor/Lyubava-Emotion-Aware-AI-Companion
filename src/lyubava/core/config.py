@@ -1,7 +1,6 @@
 import os
 from dataclasses import dataclass
 
-
 DEFAULT_MODEL_DIR = "models/emotion_classifier"
 DEFAULT_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 DEFAULT_OPENROUTER_MODEL = "openai/gpt-oss-120b"

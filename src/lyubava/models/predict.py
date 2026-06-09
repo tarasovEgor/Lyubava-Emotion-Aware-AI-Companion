@@ -25,14 +25,13 @@ class EmotionPredictor:
         self.device = torch.device(device)
 
         self.tokenizer = AutoTokenizer.from_pretrained(str(self.model_dir))
-        self.model = AutoModelForSequenceClassification.from_pretrained(str(self.model_dir))
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            str(self.model_dir)
+        )
         self.model.to(self.device)
         self.model.eval()
 
-        self.id2label = {
-            int(k): str(v)
-            for k, v in self.model.config.id2label.items()
-        }
+        self.id2label = {int(k): str(v) for k, v in self.model.config.id2label.items()}
 
     def predict(self, text: str) -> dict[str, Any]:
         if not isinstance(text, str) or not text.strip():
@@ -46,10 +45,7 @@ class EmotionPredictor:
             max_length=self.max_length,
         )
 
-        inputs = {
-            key: value.to(self.device)
-            for key, value in inputs.items()
-        }
+        inputs = {key: value.to(self.device) for key, value in inputs.items()}
 
         with torch.no_grad():
             outputs = self.model(**inputs)

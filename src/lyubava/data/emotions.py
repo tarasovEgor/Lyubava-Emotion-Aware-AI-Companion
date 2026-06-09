@@ -9,32 +9,26 @@ EMOTION_MAP: dict[str, str] = {
     "content": "joy",
     "prepared": "joy",
     "anticipating": "joy",
-
     "sad": "sadness",
     "lonely": "sadness",
     "nostalgic": "sadness",
     "disappointed": "sadness",
     "devastated": "sadness",
     "grieving": "sadness",
-
     "angry": "anger",
     "annoyed": "anger",
     "furious": "anger",
     "jealous": "anger",
     "disgusted": "anger",
-
     "afraid": "fear",
     "terrified": "fear",
     "anxious": "fear",
     "apprehensive": "fear",
-
     "surprised": "surprise",
     "impressed": "surprise",
-
     "guilty": "guilt",
     "ashamed": "guilt",
     "embarrassed": "guilt",
-
     "caring": "love",
     "trusting": "love",
     "faithful": "love",

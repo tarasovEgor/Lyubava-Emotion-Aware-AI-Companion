@@ -9,8 +9,12 @@ import numpy as np
 import pandas as pd
 from datasets import Dataset
 from sklearn.metrics import accuracy_score, classification_report, f1_score
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
-
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    Trainer,
+    TrainingArguments,
+)
 
 REQUIRED_COLUMNS = {"text", "emotion", "label"}
 

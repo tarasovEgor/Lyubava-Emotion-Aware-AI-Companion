@@ -14,7 +14,6 @@ from lyubava.api.schemas import (
 )
 from lyubava.api.services.chat import ChatService
 
-
 router = APIRouter(tags=["chat"])
 
 

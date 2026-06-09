@@ -35,6 +35,26 @@ url = "https://download.pytorch.org/whl/cu128"
 
 [dependency-groups]
 dev = [
+    "black>=25.1.0",
     "httpx>=0.28.1",
+    "pre-commit>=4.2.0",
     "pytest>=9.0.2",
+    "pyyaml>=6.0.2",
+    "ruff>=0.11.0",
 ]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B008", "E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

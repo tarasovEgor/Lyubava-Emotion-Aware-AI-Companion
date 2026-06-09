@@ -14,7 +14,9 @@ class DummyPredictor:
 
 @pytest.fixture
 def app(monkeypatch):
-    monkeypatch.setattr(lifecycle, "EmotionPredictor", lambda model_dir: DummyPredictor())
+    monkeypatch.setattr(
+        lifecycle, "EmotionPredictor", lambda model_dir: DummyPredictor()
+    )
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     return create_app()
 
