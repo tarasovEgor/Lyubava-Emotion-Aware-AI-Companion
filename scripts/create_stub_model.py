@@ -9,7 +9,8 @@ from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTok
 
 from lyubava.data.emotions import ID2LABEL, LABEL2ID, LABELS
 
-DEFAULT_BASE_MODEL = "prajjwal1/bert-tiny"
+# Small, stable checkpoint supported by current transformers releases.
+DEFAULT_BASE_MODEL = "distilbert-base-uncased"
 
 
 def parse_args() -> argparse.Namespace:
@@ -26,7 +27,7 @@ def parse_args() -> argparse.Namespace:
         "--base-model",
         type=str,
         default=DEFAULT_BASE_MODEL,
-        help="Small pretrained model used as the stub backbone.",
+        help="Tokenizer/config source model. Weights are initialized randomly.",
     )
     return parser.parse_args()
 
@@ -35,17 +36,16 @@ def main() -> None:
     args = parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
+    id2label = {str(index): label for index, label in ID2LABEL.items()}
+
     config = AutoConfig.from_pretrained(
         args.base_model,
         num_labels=len(LABELS),
-        id2label=ID2LABEL,
+        id2label=id2label,
         label2id=LABEL2ID,
     )
     tokenizer = AutoTokenizer.from_pretrained(args.base_model)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        args.base_model,
-        config=config,
-    )
+    model = AutoModelForSequenceClassification.from_config(config)
 
     model.save_pretrained(args.output_dir)
     tokenizer.save_pretrained(args.output_dir)
