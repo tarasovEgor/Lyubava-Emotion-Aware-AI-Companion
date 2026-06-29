@@ -62,8 +62,10 @@ jobs:
       - uses: astral-sh/setup-uv@v7
       - name: Install dependencies (CPU PyTorch)
         run: bash scripts/ci_install_deps.sh --group dev
-      - name: Create stub model for Docker smoke test
-        run: uv run python scripts/create_stub_model.py
+      - name: Validate trained model artifact is present
+        run: |
+          test -f models/emotion_classifier/config.json
+          test -f models/emotion_classifier/tokenizer_config.json
       - uses: docker/setup-buildx-action@v3
       - name: Build image and smoke-test API health
         run: |

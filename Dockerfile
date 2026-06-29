@@ -23,8 +23,9 @@ RUN pip install --no-cache-dir uv \
     && UV_INDEX_STRATEGY=unsafe-best-match \
        uv pip install "torch>=2.6.0" --index-url https://download.pytorch.org/whl/cpu
 
-# Copy trained or stub model artifact for local Docker testing.
+# Copy trained model artifact for local Docker testing.
 COPY models/emotion_classifier ./models/emotion_classifier
+COPY monitoring/baselines ./monitoring/baselines
 
 RUN chown -R appuser:appuser /app
 

@@ -22,3 +22,17 @@ export interface SendMessageResponse {
   user_message: ChatMessage
   assistant_message: ChatMessage
 }
+
+export interface AdminPredictionRow {
+  timestamp: string
+  session_id: string
+  text: string
+  predicted_emotion: string
+  confidence: number
+  model: string
+  provider: string
+}
+
+export interface AdminPredictionsResponse {
+  items: AdminPredictionRow[]
+}

@@ -1,0 +1,21 @@
+{
+  "text_length_bins": [
+    12537,
+    47165,
+    14479
+  ],
+  "class_distribution": {
+    "joy": 0.26676642266887746,
+    "anger": 0.16920774861487442,
+    "sadness": 0.16223830900095712,
+    "fear": 0.12503201628449334,
+    "love": 0.10195333036761435,
+    "guilt": 0.08937598576454887,
+    "surprise": 0.08542618729863442
+  },
+  "concept_proxy": {
+    "mean_confidence": 0.72,
+    "mean_entropy": 0.78,
+    "low_confidence_ratio": 0.12
+  }
+}

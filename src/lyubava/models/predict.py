@@ -52,10 +52,15 @@ class EmotionPredictor:
             probabilities = torch.softmax(outputs.logits, dim=-1)[0]
 
         confidence, predicted_id = torch.max(probabilities, dim=-1)
+        probability_distribution = {
+            self.id2label.get(index, str(index)): round(float(score), 4)
+            for index, score in enumerate(probabilities.tolist())
+        }
 
         return {
             "emotion": self.id2label[int(predicted_id.item())],
             "confidence": round(float(confidence.item()), 4),
+            "probabilities": probability_distribution,
         }
 
     def predict_batch(self, texts: list[str]) -> list[dict[str, Any]]:
