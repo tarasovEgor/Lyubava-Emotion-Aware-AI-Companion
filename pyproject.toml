@@ -6,7 +6,12 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "accelerate>=1.13.0",
-    "datasets>=4.8.4",
+    "pyyaml>=6.0.3",
+    "boto3>=1.42.0",
+    "mlflow",
+    "psycopg2-binary>=2.9.11",
+    "datasets",
+    "pandas<3.0.0",
     "dvc-gdrive>=3.0.1",
     "dvc-s3>=3.3.0",
     "dvc[gdrive]>=3.67.1",
@@ -15,8 +20,6 @@ dependencies = [
     "langchain-core>=1.4.0",
     "langchain-openai>=1.2.2",
     "numpy>=2.4.4",
-    "pandas>=3.0.1",
-    "prometheus-client>=0.23.1",
     "python-dotenv>=1.2.2",
     "scikit-learn>=1.8.0",
     "torch==2.11.0+cu128",
@@ -36,26 +39,6 @@ url = "https://download.pytorch.org/whl/cu128"
 
 [dependency-groups]
 dev = [
-    "black>=25.1.0",
     "httpx>=0.28.1",
-    "pre-commit>=4.2.0",
     "pytest>=9.0.2",
-    "pyyaml>=6.0.2",
-    "ruff>=0.11.0",
 ]
-
-[tool.black]
-line-length = 88
-target-version = ["py312"]
-
-[tool.ruff]
-line-length = 88
-target-version = "py312"
-src = ["src", "tests", "scripts"]
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
-ignore = ["B008", "E501"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
