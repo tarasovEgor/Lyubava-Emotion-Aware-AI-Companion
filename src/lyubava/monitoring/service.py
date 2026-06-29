@@ -109,9 +109,9 @@ class DriftMonitoringService:
         return snapshot
 
     def _compute_data_drift(self) -> float | None:
-        baseline_bins = self._baseline_stats.get("text_length_bins") or self._baseline_stats.get(
-            "data_bins"
-        )
+        baseline_bins = self._baseline_stats.get(
+            "text_length_bins"
+        ) or self._baseline_stats.get("data_bins")
         if baseline_bins is None:
             return None
 
@@ -145,7 +145,8 @@ class DriftMonitoringService:
         return float(
             _CONCEPT_COMPONENT_WEIGHT * abs(current_confidence - baseline_confidence)
             + _CONCEPT_COMPONENT_WEIGHT * abs(current_entropy - baseline_entropy)
-            + _CONCEPT_COMPONENT_WEIGHT * abs(current_low_conf_ratio - baseline_low_conf_ratio)
+            + _CONCEPT_COMPONENT_WEIGHT
+            * abs(current_low_conf_ratio - baseline_low_conf_ratio)
         )
 
     def _compute_target_drift(self) -> float | None:
@@ -154,7 +155,9 @@ class DriftMonitoringService:
             return None
 
         classes = sorted(set(baseline_dist.keys()) | set(self._predicted_labels))
-        baseline = np.asarray([float(baseline_dist.get(name, 0.0)) for name in classes], dtype=float)
+        baseline = np.asarray(
+            [float(baseline_dist.get(name, 0.0)) for name in classes], dtype=float
+        )
         current = np.asarray(self._predicted_label_distribution(classes), dtype=float)
         return js_divergence(baseline, current)
 
@@ -173,7 +176,9 @@ class DriftMonitoringService:
     def _mean_prediction_confidence(self) -> float:
         if not self._probabilities:
             return 0.0
-        return float(np.mean([max(probs.values(), default=0.0) for probs in self._probabilities]))
+        return float(
+            np.mean([max(probs.values(), default=0.0) for probs in self._probabilities])
+        )
 
     def _mean_prediction_entropy(self) -> float:
         if not self._probabilities:
@@ -194,7 +199,9 @@ class DriftMonitoringService:
         if not self._probabilities:
             return 0.0
         low_count = sum(
-            1 for probs in self._probabilities if max(probs.values(), default=0.0) < LOW_CONFIDENCE_THRESHOLD
+            1
+            for probs in self._probabilities
+            if max(probs.values(), default=0.0) < LOW_CONFIDENCE_THRESHOLD
         )
         return float(low_count / len(self._probabilities))
 
@@ -209,7 +216,9 @@ class DriftMonitoringService:
         return [counts.get(name, 0) / total for name in classes]
 
     @staticmethod
-    def _build_section(score: float | None, warn: float, critical: float) -> dict[str, Any]:
+    def _build_section(
+        score: float | None, warn: float, critical: float
+    ) -> dict[str, Any]:
         if score is None:
             return {"score": None, "status": "unavailable"}
         if not math.isfinite(score):

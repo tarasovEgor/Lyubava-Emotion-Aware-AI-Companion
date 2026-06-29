@@ -106,7 +106,11 @@ def test_service_keeps_only_last_n_observations():
     for label in labels:
         service.observe(
             text=f"txt-{label}",
-            probs={"joy": 0.9, "sadness": 0.1} if label == "joy" else {"joy": 0.1, "sadness": 0.9},
+            probs=(
+                {"joy": 0.9, "sadness": 0.1}
+                if label == "joy"
+                else {"joy": 0.1, "sadness": 0.9}
+            ),
             predicted_label=label,
         )
 
@@ -206,7 +210,12 @@ def test_service_computes_concept_proxy_score():
     expected_entropy = float(
         np.mean(
             [
-                -float(np.sum(np.array([p["joy"], p["sadness"]]) * np.log(np.array([p["joy"], p["sadness"]]))))
+                -float(
+                    np.sum(
+                        np.array([p["joy"], p["sadness"]])
+                        * np.log(np.array([p["joy"], p["sadness"]]))
+                    )
+                )
                 for p in observations
             ]
         )
@@ -238,7 +247,9 @@ def test_service_marks_concept_unavailable_without_concept_baseline():
     )
 
     for _ in range(3):
-        service.observe(text="sample", probs={"joy": 0.8, "sadness": 0.2}, predicted_label="joy")
+        service.observe(
+            text="sample", probs={"joy": 0.8, "sadness": 0.2}, predicted_label="joy"
+        )
 
     snapshot = service.snapshot()
 
@@ -272,7 +283,9 @@ def test_service_updates_drift_metrics_on_snapshot(monkeypatch):
         min_samples=1,
         baseline_stats={"class_distribution": {"joy": 0.5, "sadness": 0.5}},
     )
-    service.observe(text="sample", probs={"joy": 0.9, "sadness": 0.1}, predicted_label="joy")
+    service.observe(
+        text="sample", probs={"joy": 0.9, "sadness": 0.1}, predicted_label="joy"
+    )
 
     snapshot = service.snapshot()
 
@@ -309,7 +322,9 @@ def test_service_ignores_drift_metric_update_errors(monkeypatch):
         min_samples=1,
         baseline_stats={"class_distribution": {"joy": 0.5, "sadness": 0.5}},
     )
-    service.observe(text="sample", probs={"joy": 0.9, "sadness": 0.1}, predicted_label="joy")
+    service.observe(
+        text="sample", probs={"joy": 0.9, "sadness": 0.1}, predicted_label="joy"
+    )
 
     snapshot = service.snapshot()
 

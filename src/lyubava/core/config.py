@@ -72,8 +72,12 @@ class Settings:
             ),
             openrouter_model=os.getenv("OPENROUTER_MODEL", DEFAULT_OPENROUTER_MODEL),
             chat_temperature=chat_temperature,
-            drift_window_size=_get_env_int("DRIFT_WINDOW_SIZE", DEFAULT_DRIFT_WINDOW_SIZE),
-            drift_min_samples=_get_env_int("DRIFT_MIN_SAMPLES", DEFAULT_DRIFT_MIN_SAMPLES),
+            drift_window_size=_get_env_int(
+                "DRIFT_WINDOW_SIZE", DEFAULT_DRIFT_WINDOW_SIZE
+            ),
+            drift_min_samples=_get_env_int(
+                "DRIFT_MIN_SAMPLES", DEFAULT_DRIFT_MIN_SAMPLES
+            ),
             drift_baseline_path=os.getenv(
                 "DRIFT_BASELINE_PATH", DEFAULT_DRIFT_BASELINE_PATH
             ),

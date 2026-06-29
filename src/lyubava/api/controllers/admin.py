@@ -11,7 +11,9 @@ router = APIRouter(tags=["admin"])
 
 @router.get("/admin/predictions", response_model=AdminPredictionsResponse)
 def get_admin_predictions(
-    feed_service: Annotated[PredictionFeedService, Depends(get_prediction_feed_service)],
+    feed_service: Annotated[
+        PredictionFeedService, Depends(get_prediction_feed_service)
+    ],
     limit: int = Query(50, ge=1, le=200),
 ) -> AdminPredictionsResponse:
     return AdminPredictionsResponse(items=feed_service.list_items(limit))
