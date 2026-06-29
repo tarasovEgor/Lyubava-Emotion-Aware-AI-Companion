@@ -60,30 +60,72 @@ The system can remember selected non-sensitive information such as:
 ## 📁 Suggested Project Structure
 
     src/
+
 └── lyubava/
-    ├── raw/
-    │   ├── train.csv
-    │   ├── valid.csv
-    │   └── test.csv
-    ├── data/
-    │   ├── emotions.py
-    │   └── prepare.py
-    ├── models/
-    │   ├── train.py
-    │   ├── evaluate.py
-    │   └── predict.py
-    ├── api/
-    │   ├── schemas.py
-    │   └── main.py
-    ├── companion/
-    ├── monitoring/
-    └── utils/
+├── raw/
+│ ├── train.csv
+│ ├── valid.csv
+│ └── test.csv
+├── data/
+│ ├── emotions.py
+│ └── prepare.py
+├── models/
+│ ├── train.py
+│ ├── evaluate.py
+│ └── predict.py
+├── api/
+│ ├── schemas.py
+│ └── main.py
+├── companion/
+├── monitoring/
+└── utils/
 
 scripts/
 ├── prepare_data.py
 ├── run_emotion_pipeline.py
 ├── evaluate_model.py
 ├── smoke_predict.py
-└── run_api.py   # optional local convenience only, not needed for Docker
+└── run_api.py # optional local convenience only, not needed for Docker
 
 ---
+
+## 📈 Monitoring
+
+Lyubava exposes monitoring endpoints for Prometheus scraping and drift visibility:
+
+- `GET /metrics` - Prometheus metrics in text format (includes prediction and drift metrics).
+- `GET /v1/monitoring/drift` - JSON drift snapshot with current service state, sample counts, and data/concept/target drift status.
+
+### Run API + Prometheus + Grafana
+
+1. Create a local env file:
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+2. Set required environment variables (Grafana credentials are required by `docker-compose.yml`):
+
+   ```powershell
+   $env:GRAFANA_ADMIN_USER="admin"
+   $env:GRAFANA_ADMIN_PASSWORD="change-me"
+   $env:DRIFT_BASELINE_PATH="monitoring/baselines/drift-baseline.json"
+   # Optional for chat endpoint usage:
+   $env:OPENROUTER_API_KEY="..."
+   ```
+
+   A starter baseline file is bundled at `monitoring/baselines/drift-baseline.json`.
+
+3. Start the monitoring stack :
+
+   ```bash
+   docker compose up --build api prometheus grafana
+   ```
+
+4. Open services:
+
+- API: `http://localhost:8000`
+- Metrics: `http://localhost:8000/metrics`
+- Drift snapshot: `http://localhost:8000/v1/monitoring/drift`
+- Prometheus UI: `http://localhost:9090`
+- Grafana UI: `http://localhost:3000`

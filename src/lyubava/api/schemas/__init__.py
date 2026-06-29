@@ -1,3 +1,4 @@
+from lyubava.api.schemas.admin import AdminPredictionsResponse, PredictionRow
 from lyubava.api.schemas.chat import (
     ChatDebug,
     ChatHistoryMessage,
@@ -11,6 +12,7 @@ from lyubava.api.schemas.common import HealthResponse
 from lyubava.api.schemas.emotion import EmotionRequest, EmotionResponse
 
 __all__ = [
+    "AdminPredictionsResponse",
     "ChatDebug",
     "ChatHistoryMessage",
     "ChatHistoryResponse",
@@ -21,4 +23,5 @@ __all__ = [
     "EmotionRequest",
     "EmotionResponse",
     "HealthResponse",
+    "PredictionRow",
 ]

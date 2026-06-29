@@ -1,25 +1,68 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from "react";
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface ChatInputProps {
-  onSend: (content: string) => void
-  disabled?: boolean
+  onSend: (content: string) => void;
+  disabled?: boolean;
 }
 
+// const joyfulMessages = [
+//   "Ура, наконец-то пятница! 🎉",
+//   "Ребята, я сдал экзамен на отлично! Я просто счастлив!",
+//   'Аааа, они ответили мне "да"! Меня взяли на работу!',
+//   "Мы едем на море! Наконец-то дождались отпуска! 🌊",
+//   "Я выиграл! Не верю своим глазам, ура-ура-ура!",
+//   "Вау, вот это сюрприз! Мне безумно приятно!",
+//   "Я так рада тебя видеть! Столько лет прошло!",
+//   "Наконец-то я закончил этот проект. Какое облегчение и радость!",
+//   "Ого, круто! Поздравляю от всей души!",
+//   "Божечки, какой милый щенок, я сейчас умру от умиления 🥰",
+//   "Блин, как же вкусно, этот торт просто божественный 🍰",
+//   "Боже, как приятно лежать в теплой кровати, когда за окном дождь 🌧️",
+//   "Какой шикарный закат, сижу и просто наслаждаюсь моментом.",
+//   "Ммм, первый глоток утреннего кофе — это чистый экстаз. ☕",
+//   "Этот массаж — лучшее, что со мной случалось за последний месяц.",
+//   "Как же хорошо мы вчера посидели, до сих пор улыбаюсь.",
+//   "Слушаю этот трек на репите, он приносит мне столько удовольствия 🎧",
+//   "Ух ты, какая красота! Глаз не оторвать.",
+//   "Обожаю такие уютные вечера с книгой и горячим чаем.",
+//   "Идеально! Просто 10 из 10.",
+//   "Кайф! То, что нужно после тяжелого дня.",
+//   "Это просто отвал башки, лучший концерт в моей жизни! 🎸",
+//   "Моя новая тачка — это просто пушка! Не могу нарадоваться!",
+//   "Как же кайфово после тренировки сходить в сауну.",
+//   "Получил первую зп, чувство абсолютной эйфории 💸",
+//   "Обожаю, когда план выполняется идеально от и до.",
+//   "Купил себе ту самую штуку, о которой мечтал. Радуюсь как ребенок 🎮",
+//   "Огромное спасибо! Ты просто сделал мой день ❤️",
+//   "Этот мем просто истерика, смеюсь до слез 😂",
+//   "Сегодня просто потрясающий день, всё идет как по маслу.",
+// ];
 export function ChatInput({ onSend, disabled }: ChatInputProps) {
-  const [text, setText] = useState('')
+  const [text, setText] = useState("");
+
+  // const a = async (msg) => {
+  //   await new Promise((resolve) => setTimeout(resolve, 500));
+  //   onSend(msg);
+  // };
+
+  // useEffect(() => {
+  //   joyfulMessages.forEach(async (msg) => {
+  //     await a(msg);
+  //   });
+  // }, []);
 
   function handleSubmit(event: FormEvent) {
-    event.preventDefault()
-    const trimmed = text.trim()
+    event.preventDefault();
+    const trimmed = text.trim();
     if (!trimmed || disabled) {
-      return
+      return;
     }
 
-    onSend(trimmed)
-    setText('')
+    onSend(trimmed);
+    setText("");
   }
 
   return (
@@ -38,5 +81,5 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         Отправить
       </Button>
     </form>
-  )
+  );
 }
