@@ -60,31 +60,32 @@ The system can remember selected non-sensitive information such as:
 ## 📁 Suggested Project Structure
 
     src/
+
 └── lyubava/
-    ├── raw/
-    │   ├── train.csv
-    │   ├── valid.csv
-    │   └── test.csv
-    ├── data/
-    │   ├── emotions.py
-    │   └── prepare.py
-    ├── models/
-    │   ├── train.py
-    │   ├── evaluate.py
-    │   └── predict.py
-    ├── api/
-    │   ├── schemas.py
-    │   └── main.py
-    ├── companion/
-    ├── monitoring/
-    └── utils/
+├── raw/
+│ ├── train.csv
+│ ├── valid.csv
+│ └── test.csv
+├── data/
+│ ├── emotions.py
+│ └── prepare.py
+├── models/
+│ ├── train.py
+│ ├── evaluate.py
+│ └── predict.py
+├── api/
+│ ├── schemas.py
+│ └── main.py
+├── companion/
+├── monitoring/
+└── utils/
 
 scripts/
 ├── prepare_data.py
 ├── run_emotion_pipeline.py
 ├── evaluate_model.py
 ├── smoke_predict.py
-└── run_api.py   # optional local convenience only, not needed for Docker
+└── run_api.py # optional local convenience only, not needed for Docker
 
 ---
 
@@ -115,7 +116,7 @@ Lyubava exposes monitoring endpoints for Prometheus scraping and drift visibilit
 
    A starter baseline file is bundled at `monitoring/baselines/drift-baseline.json`.
 
-3. Start the monitoring stack:
+3. Start the monitoring stack :
 
    ```bash
    docker compose up --build api prometheus grafana
