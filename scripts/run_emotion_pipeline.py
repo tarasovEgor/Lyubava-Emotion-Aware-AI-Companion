@@ -66,6 +66,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--seed", type=int, default=42)
 
+    parser.add_argument(
+        "--mlflow-config",
+        type=Path,
+        default=Path("configs/mlflow.yaml"),
+        help="Path to MLflow tracking and registry configuration.",
+    )
+    parser.add_argument(
+        "--disable-mlflow",
+        action="store_true",
+        help="Disable MLflow tracking for quick local/debug runs.",
+    )
+
     return parser.parse_args()
 
 
@@ -74,6 +86,7 @@ def main() -> None:
 
     print("Training emotion classifier...")
 
+    # Передаем параметры MLflow в функцию train
     validation_metrics = train(
         data_dir=args.data_dir,
         output_dir=args.model_dir,
@@ -85,6 +98,8 @@ def main() -> None:
         num_train_epochs=args.num_train_epochs,
         weight_decay=args.weight_decay,
         seed=args.seed,
+        mlflow_config_path=args.mlflow_config,
+        enable_mlflow=not args.disable_mlflow,
     )
 
     print("Validation metrics:")

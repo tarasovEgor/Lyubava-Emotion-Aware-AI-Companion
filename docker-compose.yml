@@ -1,40 +1,72 @@
 services:
-  api:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lyubava-mlflow-postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    container_name: lyubava-mlflow-minio
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mlflow:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: ghcr.io/${IMAGE_OWNER:-local}/lyubava-emotion-aware-ai-companion:latest
-    ports:
-      - "8000:8000"
-    environment:
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
-      DRIFT_BASELINE_PATH: ${DRIFT_BASELINE_PATH:-monitoring/baselines/drift-baseline.json}
-  prometheus:
-    image: prom/prometheus:v2.54.1
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-    volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus-data:/prometheus
-    ports:
-      - "127.0.0.1:9090:9090"
+      dockerfile: Dockerfile.mlflow
+    container_name: lyubava-mlflow-server
+    restart: unless-stopped
     depends_on:
-      - api
-  grafana:
-    image: grafana/grafana:11.1.4
-    ports:
-      - "127.0.0.1:3000:3000"
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    env_file:
+      - .env
     environment:
-      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:?Set GRAFANA_ADMIN_USER}
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD}
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
-    depends_on:
-      - prometheus
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_SERVER_S3_ENDPOINT_URL:-http://minio:9000}
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      --artifacts-destination s3://${MLFLOW_S3_BUCKET}
+    ports:
+      - "5000:5000"
 
 volumes:
-  prometheus-data:
-  grafana-data:
+  postgres_data:
+  minio_data:
