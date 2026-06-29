@@ -13,7 +13,6 @@ import boto3
 import mlflow
 import yaml
 from botocore.exceptions import ClientError
-
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -135,9 +134,7 @@ def ensure_s3_bucket(
             ) from exc
 
         region = (
-            os.getenv("AWS_DEFAULT_REGION")
-            or os.getenv("AWS_REGION")
-            or "us-east-1"
+            os.getenv("AWS_DEFAULT_REGION") or os.getenv("AWS_REGION") or "us-east-1"
         )
         create_kwargs: dict[str, Any] = {"Bucket": bucket_name}
         if region != "us-east-1":
@@ -149,7 +146,9 @@ def ensure_s3_bucket(
     return bucket_name
 
 
-def get_dvc_data_output(data_dvc_path: Path = Path("data.dvc")) -> dict[str, Any] | None:
+def get_dvc_data_output(
+    data_dvc_path: Path = Path("data.dvc"),
+) -> dict[str, Any] | None:
     if not data_dvc_path.exists():
         return None
 
@@ -188,7 +187,9 @@ def set_dataset_tags_from_dvc(data_dvc_path: Path = Path("data.dvc")) -> str | N
     return dvc_hash
 
 
-def load_mlflow_config(config_path: Path | str = Path("configs/mlflow.yaml")) -> MLflowConfig:
+def load_mlflow_config(
+    config_path: Path | str = Path("configs/mlflow.yaml"),
+) -> MLflowConfig:
     path = Path(config_path)
     raw_config: dict[str, Any] = {}
 
@@ -326,7 +327,9 @@ def log_dvc_metadata(
     return metadata
 
 
-def log_training_artifacts(output_dir: Path, artifact_path: str = "training_output") -> None:
+def log_training_artifacts(
+    output_dir: Path, artifact_path: str = "training_output"
+) -> None:
     if output_dir.exists():
         mlflow.log_artifacts(str(output_dir), artifact_path=artifact_path)
 
