@@ -52,17 +52,9 @@ spec:
               containerPort: 9000
             - name: console
               containerPort: 9001
-          env:
-            - name: MINIO_ROOT_USER
-              valueFrom:
-                secretKeyRef:
-                  name: lyubava-secrets
-                  key: MINIO_ROOT_USER
-            - name: MINIO_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: lyubava-secrets
-                  key: MINIO_ROOT_PASSWORD
+          envFrom:
+            - secretRef:
+                name: lyubava-secrets
           readinessProbe:
             httpGet:
               path: /minio/health/ready
@@ -117,19 +109,6 @@ spec:
                 sleep 2
               done
               mc mb --ignore-existing "local/$MLFLOW_S3_BUCKET"
-          env:
-            - name: MINIO_ROOT_USER
-              valueFrom:
-                secretKeyRef:
-                  name: lyubava-secrets
-                  key: MINIO_ROOT_USER
-            - name: MINIO_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: lyubava-secrets
-                  key: MINIO_ROOT_PASSWORD
-            - name: MLFLOW_S3_BUCKET
-              valueFrom:
-                configMapKeyRef:
-                  name: lyubava-config
-                  key: MLFLOW_S3_BUCKET
+          envFrom:
+            - secretRef:
+                name: lyubava-secrets

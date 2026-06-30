@@ -114,13 +114,9 @@ spec:
           ports:
             - name: http
               containerPort: 3000
-          env:
-            - name: GF_SECURITY_ADMIN_USER
-              value: admin
-            - name: GF_SECURITY_ADMIN_PASSWORD
-              value: change-me
-            - name: GF_USERS_ALLOW_SIGN_UP
-              value: "false"
+          envFrom:
+            - secretRef:
+                name: lyubava-secrets
           readinessProbe:
             httpGet:
               path: /api/health
