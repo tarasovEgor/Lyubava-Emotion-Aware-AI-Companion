@@ -48,11 +48,50 @@ spec:
               mlflow server
               --host 0.0.0.0
               --port 5000
+              --allowed-hosts "*"
               --backend-store-uri postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
               --artifacts-destination s3://${MLFLOW_S3_BUCKET}
-          envFrom:
-            - secretRef:
-                name: lyubava-secrets
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: lyubava-config
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: lyubava-config
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lyubava-secrets
+                  key: POSTGRES_PASSWORD
+            - name: MLFLOW_S3_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: lyubava-config
+                  key: MLFLOW_S3_BUCKET
+            - name: MLFLOW_S3_ENDPOINT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: lyubava-config
+                  key: MLFLOW_S3_ENDPOINT_URL
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: lyubava-config
+                  key: AWS_DEFAULT_REGION
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: lyubava-secrets
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: lyubava-secrets
+                  key: AWS_SECRET_ACCESS_KEY
           readinessProbe:
             tcpSocket:
               port: http

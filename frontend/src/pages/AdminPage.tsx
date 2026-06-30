@@ -241,6 +241,10 @@ export function AdminPage() {
     return 'Ожидание запуска'
   })()
 
+  const lastTrainTimestamp =
+    retrainStatus?.finished_at ?? retrainStatus?.started_at ?? null
+  const lastTrainLabel = lastTrainTimestamp ? formatTimestamp(lastTrainTimestamp) : '—'
+
   return (
     <div className="mx-auto max-w-6xl p-6">
       <h1 className="mb-6 text-lg font-semibold">Админ</h1>
@@ -269,8 +273,7 @@ export function AdminPage() {
           <CardTitle>Метрики</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-neutral-600">
-          <p>accuracy: —</p>
-          <p>last train: —</p>
+          <p>last train: {lastTrainLabel}</p>
         </CardContent>
       </Card>
 

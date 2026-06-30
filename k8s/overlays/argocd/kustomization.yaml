@@ -1,8 +1,25 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+generatorOptions:
+  disableNameSuffixHash: true
+
 resources:
   - ../../minikube
+
+configMapGenerator:
+  - name: lyubava-config
+    literals:
+      - POSTGRES_DB=mlflow
+      - POSTGRES_USER=mlflow
+      - MLFLOW_S3_BUCKET=lyubava-mlflow-artifacts
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+      - AWS_DEFAULT_REGION=us-east-1
+secretGenerator:
+  - name: lyubava-secrets
+    behavior: replace
+    envs:
+      - secrets.argocd.env
 
 images:
   - name: lyubava-api
