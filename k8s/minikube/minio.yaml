@@ -84,6 +84,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: minio-create-buckets
+  annotations:
+    argocd.argoproj.io/sync-options: Force=true,Replace=true
   labels:
     app.kubernetes.io/name: minio-create-buckets
     app.kubernetes.io/part-of: lyubava
