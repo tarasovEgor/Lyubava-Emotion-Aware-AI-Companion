@@ -29,4 +29,4 @@ configMapGenerator:
 secretGenerator:
   - name: lyubava-secrets
     envs:
-      - .env
+      - .env.example
