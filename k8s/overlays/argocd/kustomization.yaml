@@ -34,3 +34,4 @@ images:
 
 patches:
   - path: patches/ghcr-image-pull.yaml
+  - path: patches/api-openrouter-secret.yaml
