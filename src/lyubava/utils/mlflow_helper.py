@@ -204,9 +204,13 @@ def load_mlflow_config(
     s3_config = config.get("s3", {})
     registry_config = config.get("model_registry", {})
 
+    tracking_uri = str(config["tracking_uri"])
+    if "$" in tracking_uri:
+        tracking_uri = os.getenv("MLFLOW_TRACKING_URI", DEFAULT_MLFLOW_CONFIG["tracking_uri"])
+
     return MLflowConfig(
         experiment_name=str(config["experiment_name"]),
-        tracking_uri=str(config["tracking_uri"]),
+        tracking_uri=tracking_uri,
         artifact_location=config.get("artifact_location"),
         run_name_prefix=str(run_config.get("name_prefix", "emotion-classifier")),
         run_tags={str(k): str(v) for k, v in run_config.get("tags", {}).items()},

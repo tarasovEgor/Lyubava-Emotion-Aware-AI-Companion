@@ -4,6 +4,7 @@ from fastapi import Depends, Request
 
 from lyubava.api.services.chat import ChatService
 from lyubava.api.services.prediction_feed import PredictionFeedService
+from lyubava.api.services.retrain import RetrainService
 from lyubava.core.errors import ServiceUnavailableError
 from lyubava.core.lifecycle import AppContainer
 from lyubava.models.predict import EmotionPredictor
@@ -47,3 +48,9 @@ def get_prediction_feed_service(
     container: Annotated[AppContainer, Depends(get_container)],
 ) -> PredictionFeedService:
     return container.prediction_feed_service
+
+
+def get_retrain_service(
+    container: Annotated[AppContainer, Depends(get_container)],
+) -> RetrainService:
+    return container.retrain_service

@@ -83,16 +83,16 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: minio-create-mlflow-bucket
+  name: minio-create-buckets
   labels:
-    app.kubernetes.io/name: minio-create-mlflow-bucket
+    app.kubernetes.io/name: minio-create-buckets
     app.kubernetes.io/part-of: lyubava
 spec:
   backoffLimit: 10
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: minio-create-mlflow-bucket
+        app.kubernetes.io/name: minio-create-buckets
         app.kubernetes.io/part-of: lyubava
     spec:
       restartPolicy: OnFailure
@@ -109,6 +109,25 @@ spec:
                 sleep 2
               done
               mc mb --ignore-existing "local/$MLFLOW_S3_BUCKET"
+              mc mb --ignore-existing "local/$DVC_BUCKET"
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: lyubava-secrets
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lyubava-secrets
+                  key: MINIO_ROOT_PASSWORD
+            - name: MLFLOW_S3_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: lyubava-config
+                  key: MLFLOW_S3_BUCKET
+            - name: DVC_BUCKET
+              value: dvc
           envFrom:
             - secretRef:
                 name: lyubava-secrets

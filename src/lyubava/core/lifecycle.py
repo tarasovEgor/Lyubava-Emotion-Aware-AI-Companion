@@ -10,6 +10,7 @@ from lyubava.api.clients.openrouter import OpenRouterLLMClient
 from lyubava.api.repositories.chat_history import InMemoryChatHistoryRepository
 from lyubava.api.services.chat import ChatService
 from lyubava.api.services.prediction_feed import PredictionFeedService
+from lyubava.api.services.retrain import RetrainService
 from lyubava.core.config import Settings
 from lyubava.models.predict import EmotionPredictor
 from lyubava.monitoring.service import DriftMonitoringService, DriftThresholds
@@ -21,6 +22,7 @@ class AppContainer:
     predictor: EmotionPredictor
     drift_service: DriftMonitoringService | None
     prediction_feed_service: PredictionFeedService
+    retrain_service: RetrainService
     chat_service: ChatService | None
     drift_init_error: str | None = None
     chat_init_error: str | None = None
@@ -54,6 +56,7 @@ def build_container(settings: Settings) -> AppContainer:
     predictor = EmotionPredictor(settings.model_dir)
     history_repository = InMemoryChatHistoryRepository()
     prediction_feed_service = PredictionFeedService(settings.predictions_feed_max_items)
+    retrain_service = RetrainService(settings=settings)
     drift_init_error: str | None = None
     drift_service: DriftMonitoringService | None = None
     chat_init_error: str | None = None
@@ -93,6 +96,7 @@ def build_container(settings: Settings) -> AppContainer:
         predictor=predictor,
         drift_service=drift_service,
         prediction_feed_service=prediction_feed_service,
+        retrain_service=retrain_service,
         chat_service=chat_service,
         drift_init_error=drift_init_error,
         chat_init_error=chat_init_error,
