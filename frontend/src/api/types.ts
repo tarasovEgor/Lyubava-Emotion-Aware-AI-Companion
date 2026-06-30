@@ -36,3 +36,28 @@ export interface AdminPredictionRow {
 export interface AdminPredictionsResponse {
   items: AdminPredictionRow[]
 }
+
+export type DriftStatus =
+  | 'ok'
+  | 'warn'
+  | 'critical'
+  | 'insufficient_data'
+  | 'unavailable'
+
+export interface DriftSectionSnapshot {
+  score: number | null
+  status: DriftStatus
+}
+
+export interface DriftSnapshotResponse {
+  service_status: DriftStatus
+  window_size: number
+  min_samples: number
+  sample_count: number
+  drift: {
+    data: DriftSectionSnapshot
+    concept: DriftSectionSnapshot
+    target: DriftSectionSnapshot
+  }
+  last_update: string | null
+}
