@@ -37,3 +37,45 @@ def test_chat_unavailable_without_api_key(client):
     )
     assert response.status_code == 503
     assert response.json()["detail"] == "OPENROUTER_API_KEY is not set."
+
+
+def test_admin_retrain_start_returns_accepted(client):
+    status_payload = {
+        "state": "running",
+        "started_at": "2026-06-30T12:00:00+00:00",
+        "finished_at": None,
+        "message": "Retraining started.",
+        "metrics": None,
+    }
+
+    class StubRetrainService:
+        def start(self):
+            return type("Status", (), status_payload)()
+
+    client.app.state.container.retrain_service = StubRetrainService()
+
+    response = client.post("/v1/admin/retrain")
+
+    assert response.status_code == 202
+    assert response.json() == status_payload
+
+
+def test_admin_retrain_status_returns_payload(client):
+    status_payload = {
+        "state": "succeeded",
+        "started_at": "2026-06-30T12:00:00+00:00",
+        "finished_at": "2026-06-30T12:10:00+00:00",
+        "message": "Retraining completed successfully.",
+        "metrics": {"eval_accuracy": 0.9},
+    }
+
+    class StubRetrainService:
+        def get_status(self):
+            return type("Status", (), status_payload)()
+
+    client.app.state.container.retrain_service = StubRetrainService()
+
+    response = client.get("/v1/admin/retrain")
+
+    assert response.status_code == 200
+    assert response.json() == status_payload

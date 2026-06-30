@@ -1,13 +1,23 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { getAdminPredictions, getDriftSnapshot } from '@/api/admin'
-import type { AdminPredictionRow, DriftSnapshotResponse } from '@/api/types'
+import {
+  getAdminPredictions,
+  getDriftSnapshot,
+  getRetrainStatus,
+  startRetrain,
+} from '@/api/admin'
+import type {
+  AdminPredictionRow,
+  DriftSnapshotResponse,
+  RetrainStatusResponse,
+} from '@/api/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const DEFAULT_LIMIT = 50
 const TEXT_PREVIEW_MAX_LENGTH = 80
 const DRIFT_POLL_INTERVAL_MS = 30_000
+const RETRAIN_POLL_INTERVAL_MS = 5_000
 
 function formatTimestamp(isoValue: string): string {
   const date = new Date(isoValue)
@@ -35,6 +45,10 @@ export function AdminPage() {
   const [driftSnapshot, setDriftSnapshot] = useState<DriftSnapshotResponse | null>(
     null,
   )
+  const [retrainStatus, setRetrainStatus] = useState<RetrainStatusResponse | null>(
+    null,
+  )
+  const [isStartingRetrain, setIsStartingRetrain] = useState(false)
 
   useEffect(() => {
     let isCancelled = false
@@ -63,6 +77,40 @@ export function AdminPage() {
 
     return () => {
       isCancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    let isCancelled = false
+    let intervalId: number | null = null
+
+    const loadRetrainStatus = async () => {
+      try {
+        const status = await getRetrainStatus()
+        if (!isCancelled) {
+          setRetrainStatus(status)
+          if (status.state === 'running' && intervalId === null) {
+            intervalId = window.setInterval(() => {
+              void loadRetrainStatus()
+            }, RETRAIN_POLL_INTERVAL_MS)
+          }
+          if (status.state !== 'running' && intervalId !== null) {
+            window.clearInterval(intervalId)
+            intervalId = null
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load retrain status', error)
+      }
+    }
+
+    void loadRetrainStatus()
+
+    return () => {
+      isCancelled = true
+      if (intervalId !== null) {
+        window.clearInterval(intervalId)
+      }
     }
   }, [])
 
@@ -166,6 +214,33 @@ export function AdminPage() {
     )
   }, [isLoadingPredictions, predictionsError, predictions])
 
+  const handleStartRetrain = async () => {
+    setIsStartingRetrain(true)
+    try {
+      const status = await startRetrain()
+      setRetrainStatus(status)
+    } catch (error) {
+      console.error('Failed to start retrain', error)
+      setRetrainStatus({
+        state: 'failed',
+        started_at: null,
+        finished_at: null,
+        message: 'Не удалось запустить переобучение.',
+        metrics: null,
+      })
+    } finally {
+      setIsStartingRetrain(false)
+    }
+  }
+
+  const retrainStateLabel = (() => {
+    if (!retrainStatus) return 'Статус неизвестен'
+    if (retrainStatus.state === 'running') return 'Выполняется'
+    if (retrainStatus.state === 'succeeded') return 'Успешно завершено'
+    if (retrainStatus.state === 'failed') return 'Ошибка'
+    return 'Ожидание запуска'
+  })()
+
   return (
     <div className="mx-auto max-w-6xl p-6">
       <h1 className="mb-6 text-lg font-semibold">Админ</h1>
@@ -199,12 +274,19 @@ export function AdminPage() {
         </CardContent>
       </Card>
 
-      <Button className="mt-4" disabled>
+      <Button
+        className="mt-4"
+        disabled={isStartingRetrain || retrainStatus?.state === 'running'}
+        onClick={() => {
+          void handleStartRetrain()
+        }}
+      >
         Переобучить
       </Button>
-      <p className="mt-2 text-xs text-neutral-500">
-        Будет подключено к API позже.
-      </p>
+      <p className="mt-2 text-xs text-neutral-500">Статус: {retrainStateLabel}</p>
+      {retrainStatus?.message && (
+        <p className="mt-1 text-xs text-neutral-500">{retrainStatus.message}</p>
+      )}
 
       <Card className="mt-6">
         <CardHeader>
