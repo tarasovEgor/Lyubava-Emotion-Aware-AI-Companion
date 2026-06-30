@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { getAdminPredictions } from '@/api/admin'
-import type { AdminPredictionRow } from '@/api/types'
+import { getAdminPredictions, getDriftSnapshot } from '@/api/admin'
+import type { AdminPredictionRow, DriftSnapshotResponse } from '@/api/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const DEFAULT_LIMIT = 50
 const TEXT_PREVIEW_MAX_LENGTH = 80
+const DRIFT_POLL_INTERVAL_MS = 30_000
 
 function formatTimestamp(isoValue: string): string {
   const date = new Date(isoValue)
@@ -31,6 +32,9 @@ export function AdminPage() {
   const [predictions, setPredictions] = useState<AdminPredictionRow[]>([])
   const [isLoadingPredictions, setIsLoadingPredictions] = useState(true)
   const [predictionsError, setPredictionsError] = useState<string | null>(null)
+  const [driftSnapshot, setDriftSnapshot] = useState<DriftSnapshotResponse | null>(
+    null,
+  )
 
   useEffect(() => {
     let isCancelled = false
@@ -61,6 +65,55 @@ export function AdminPage() {
       isCancelled = true
     }
   }, [])
+
+  useEffect(() => {
+    let isCancelled = false
+
+    const loadDriftSnapshot = async () => {
+      try {
+        const response = await getDriftSnapshot()
+        if (!isCancelled) {
+          setDriftSnapshot(response)
+        }
+      } catch (error) {
+        console.error('Failed to load drift snapshot', error)
+      }
+    }
+
+    void loadDriftSnapshot()
+    const intervalId = window.setInterval(() => {
+      void loadDriftSnapshot()
+    }, DRIFT_POLL_INTERVAL_MS)
+
+    return () => {
+      isCancelled = true
+      window.clearInterval(intervalId)
+    }
+  }, [])
+
+  const dataDriftSection = driftSnapshot?.drift.data
+  const shouldShowDataDriftAlert =
+    dataDriftSection?.status === 'warn' || dataDriftSection?.status === 'critical'
+  const dataDriftAlertClasses =
+    dataDriftSection?.status === 'critical'
+      ? 'border-red-300 bg-red-50 text-red-800'
+      : 'border-amber-300 bg-amber-50 text-amber-800'
+  const dataDriftAlertTitle =
+    dataDriftSection?.status === 'critical'
+      ? 'Критический data drift'
+      : 'Предупреждение: data drift'
+  const targetDriftSection = driftSnapshot?.drift.target
+  const shouldShowTargetDriftAlert =
+    targetDriftSection?.status === 'warn' ||
+    targetDriftSection?.status === 'critical'
+  const targetDriftAlertClasses =
+    targetDriftSection?.status === 'critical'
+      ? 'border-red-300 bg-red-50 text-red-800'
+      : 'border-amber-300 bg-amber-50 text-amber-800'
+  const targetDriftAlertTitle =
+    targetDriftSection?.status === 'critical'
+      ? 'Критический target drift'
+      : 'Предупреждение: target drift'
 
   const predictionsContent = useMemo(() => {
     if (isLoadingPredictions) {
@@ -116,6 +169,25 @@ export function AdminPage() {
   return (
     <div className="mx-auto max-w-6xl p-6">
       <h1 className="mb-6 text-lg font-semibold">Админ</h1>
+
+      {shouldShowDataDriftAlert && dataDriftSection && (
+        <div className={`mb-4 rounded-md border px-4 py-3 text-sm ${dataDriftAlertClasses}`}>
+          <p className="font-medium">{dataDriftAlertTitle}</p>
+          <p className="mt-1">
+            score: {dataDriftSection.score?.toFixed(3) ?? '—'}.
+            {' '}Проверьте входящий поток данных и baseline.
+          </p>
+        </div>
+      )}
+      {shouldShowTargetDriftAlert && targetDriftSection && (
+        <div className={`mb-4 rounded-md border px-4 py-3 text-sm ${targetDriftAlertClasses}`}>
+          <p className="font-medium">{targetDriftAlertTitle}</p>
+          <p className="mt-1">
+            score: {targetDriftSection.score?.toFixed(3) ?? '—'}.
+            {' '}Проверьте сдвиг распределения эмоций в проде.
+          </p>
+        </div>
+      )}
 
       <Card>
         <CardHeader>
