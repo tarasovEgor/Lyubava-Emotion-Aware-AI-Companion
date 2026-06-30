@@ -11,8 +11,21 @@ GitHub Actions (CD)  ->  GHCR images (api / frontend / mlflow)
 git: k8s/overlays/argocd  ->  Argo CD sync  ->  Kubernetes (namespace lyubava)
 ```
 
+- **CD** builds and pushes container images to GHCR (pulls the model from DVC/MinIO first).
+
+### CD secrets (MinIO)
+
+Configure these in GitHub **Settings → Secrets → Actions**:
+
+| Secret | Example |
+|--------|---------|
+| `DVC_S3_ENDPOINT_URL` | `http://<minikube-ip>:30900` or your public MinIO URL |
+| `AWS_ACCESS_KEY_ID` | `minioadmin` |
+| `AWS_SECRET_ACCESS_KEY` | your MinIO password |
+
+GitHub-hosted runners must be able to reach the MinIO endpoint over the network.
+
 - **CI** still runs tests and docker smoke checks.
-- **CD** builds and pushes container images to GHCR.
 - **Argo CD** watches `k8s/overlays/argocd` in this repository and applies the stack to the cluster.
 
 Manual `kubectl apply -k k8s/minikube` remains available for local image builds. For GitOps use the Argo CD overlay.
