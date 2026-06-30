@@ -206,7 +206,9 @@ def load_mlflow_config(
 
     tracking_uri = str(config["tracking_uri"])
     if "$" in tracking_uri:
-        tracking_uri = os.getenv("MLFLOW_TRACKING_URI", DEFAULT_MLFLOW_CONFIG["tracking_uri"])
+        tracking_uri = os.getenv(
+            "MLFLOW_TRACKING_URI", DEFAULT_MLFLOW_CONFIG["tracking_uri"]
+        )
 
     return MLflowConfig(
         experiment_name=str(config["experiment_name"]),

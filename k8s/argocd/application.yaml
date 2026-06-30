@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: lyubava
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: lyubava
+  source:
+    repoURL: https://github.com/tarasovEgor/Lyubava-Emotion-Aware-AI-Companion.git
+    targetRevision: develop
+    path: k8s/overlays/argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: lyubava
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
