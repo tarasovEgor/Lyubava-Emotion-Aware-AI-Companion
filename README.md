@@ -137,7 +137,13 @@ Local Kubernetes manifests live in `k8s/minikube`.
 ```powershell
 minikube image build -t lyubava-api:latest -f Dockerfile .
 minikube image build -t lyubava-mlflow:latest -f Dockerfile.mlflow .
-minikube image build -t lyubava-frontend:latest -f frontend/Dockerfile frontend
+minikube image build -t lyubava-frontend:latest frontend
+Copy-Item k8s/minikube/.env.example k8s/minikube/.env
+```
+
+Edit `k8s/minikube/.env` before applying the manifests. Kustomize uses this file to generate the Kubernetes Secret consumed by the pods:
+
+```powershell
 kubectl apply -k k8s/minikube
 ```
 

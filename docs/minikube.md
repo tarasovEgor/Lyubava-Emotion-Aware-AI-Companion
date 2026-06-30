@@ -31,18 +31,26 @@ PowerShell:
 ```powershell
 minikube image build -t lyubava-api:latest -f Dockerfile .
 minikube image build -t lyubava-mlflow:latest -f Dockerfile.mlflow .
-minikube image build -t lyubava-frontend:latest -f frontend/Dockerfile frontend
+minikube image build -t lyubava-frontend:latest frontend
 ```
 
 By default the frontend image is built with `VITE_CHAT_MOCK=true`, so the chat screen opens even without an OpenRouter key. To route chat messages to the backend LLM endpoint, rebuild it with:
 
 ```powershell
-minikube image build -t lyubava-frontend:latest -f frontend/Dockerfile --build-arg VITE_CHAT_MOCK=false frontend
+minikube image build -t lyubava-frontend:latest --build-arg VITE_CHAT_MOCK=false frontend
 ```
 
-Then set `OPENROUTER_API_KEY` in `k8s/minikube/secrets.yaml` before applying the manifests.
+Then set `OPENROUTER_API_KEY` in the local `k8s/minikube/.env` file before applying the manifests.
 
 ## Deploy
+
+Create a local Kubernetes env file first. This file is ignored by git and is used by kustomize to generate the `lyubava-secrets` Kubernetes Secret:
+
+```powershell
+Copy-Item k8s/minikube/.env.example k8s/minikube/.env
+```
+
+Edit `k8s/minikube/.env` and set local values for the backend, Postgres, MinIO, AWS-compatible MinIO credentials, MLflow, Grafana admin credentials, and optionally `OPENROUTER_API_KEY`.
 
 ```powershell
 kubectl apply -k k8s/minikube
@@ -77,10 +85,10 @@ Fixed NodePorts are also configured:
 - Frontend: `http://$(minikube ip):30000`
 - API: `http://$(minikube ip):30080`
 - Prometheus: `http://$(minikube ip):30090`
-- Grafana: `http://$(minikube ip):30300` (`admin` / `change-me`)
+- Grafana: `http://$(minikube ip):30300` (credentials from `k8s/minikube/.env`)
 - MLflow: `http://$(minikube ip):30500`
 - MinIO API: `http://$(minikube ip):30900`
-- MinIO console: `http://$(minikube ip):30901` (`minioadmin` / `minioadmin123`)
+- MinIO console: `http://$(minikube ip):30901` (credentials from `k8s/minikube/.env`)
 
 On Windows, `minikube service -n lyubava frontend` is usually the most reliable way to open the frontend because the driver may not expose NodePorts directly on the host.
 
