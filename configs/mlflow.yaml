@@ -1,4 +1,4 @@
-tracking_uri: http://localhost:5000
+tracking_uri: ${MLFLOW_TRACKING_URI}
 experiment_name: lyubava-emotion-classifier
 artifact_location: s3://lyubava-mlflow-artifacts
 

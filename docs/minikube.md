@@ -84,6 +84,42 @@ Fixed NodePorts are also configured:
 
 On Windows, `minikube service -n lyubava frontend` is usually the most reliable way to open the frontend because the driver may not expose NodePorts directly on the host.
 
+## DVC with MinIO
+
+The default DVC remote (`origin`) is configured to use MinIO (`s3://dvc`).
+
+The minikube manifests create the `dvc` bucket automatically via the `minio-create-buckets` job.
+
+Set local credentials in `config.local` (never committed):
+
+```powershell
+dvc remote modify --local origin access_key_id minioadmin
+dvc remote modify --local origin secret_access_key minioadmin123
+```
+
+Choose the endpoint depending on how you access MinIO from the host:
+
+1. **Via NodePort**
+
+   ```powershell
+   $MINIKUBE_IP = minikube ip
+   dvc remote modify --local origin endpointurl "http://$MINIKUBE_IP`:30900"
+   ```
+
+2. **Via port-forward**
+
+   ```powershell
+   kubectl -n lyubava port-forward svc/minio 9000:9000
+   dvc remote modify --local origin endpointurl http://localhost:9000
+   ```
+
+Then sync artifacts:
+
+```powershell
+dvc pull models.dvc
+dvc push models.dvc
+```
+
 ## Useful commands
 
 ```powershell
