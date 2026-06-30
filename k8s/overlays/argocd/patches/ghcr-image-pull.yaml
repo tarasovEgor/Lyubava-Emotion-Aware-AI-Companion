@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  template:
+    spec:
+      imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-credentials
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  template:
+    spec:
+      imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-credentials
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow
+spec:
+  template:
+    spec:
+      imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-credentials

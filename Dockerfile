@@ -14,6 +14,7 @@ RUN useradd --create-home --shell /bin/bash appuser
 # Copy package metadata and source.
 COPY pyproject.toml uv.lock ./
 COPY src ./src
+COPY configs ./configs
 
 # Install CPU PyTorch for local Docker deployments.
 RUN pip install --no-cache-dir uv \
@@ -25,6 +26,7 @@ RUN pip install --no-cache-dir uv \
 
 # Copy trained model artifact for local Docker testing.
 COPY models/emotion_classifier ./models/emotion_classifier
+COPY data/processed/empatheticdialogues ./data/processed/empatheticdialogues
 COPY monitoring/baselines ./monitoring/baselines
 
 RUN chown -R appuser:appuser /app

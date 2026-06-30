@@ -5,8 +5,6 @@ namespace: lyubava
 
 resources:
   - namespace.yaml
-  - app-config.yaml
-  - secrets.yaml
   - postgres.yaml
   - minio.yaml
   - mlflow.yaml
@@ -27,3 +25,8 @@ configMapGenerator:
   - name: grafana-dashboard-lyubava
     files:
       - lyubava-drift.json=config/grafana/dashboards/lyubava-drift.json
+
+secretGenerator:
+  - name: lyubava-secrets
+    envs:
+      - .env

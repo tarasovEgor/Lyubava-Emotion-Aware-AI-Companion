@@ -37,6 +37,16 @@ export interface AdminPredictionsResponse {
   items: AdminPredictionRow[]
 }
 
+export type RetrainState = 'idle' | 'running' | 'succeeded' | 'failed'
+
+export interface RetrainStatusResponse {
+  state: RetrainState
+  started_at: string | null
+  finished_at: string | null
+  message: string | null
+  metrics: Record<string, unknown> | null
+}
+
 export type DriftStatus =
   | 'ok'
   | 'warn'

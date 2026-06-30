@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
     tags: ["v*"]
 
 permissions:
@@ -11,13 +11,15 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set lowercase GHCR image name
+        run: echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
 
       - uses: actions/setup-python@v5
         with:
@@ -28,11 +30,26 @@ jobs:
       - name: Install dependencies (CPU PyTorch)
         run: bash scripts/ci_install_deps.sh --group dev
 
-      - name: Pull trained model from DVC
+      - name: Pull trained model from DVC (MinIO)
+        id: dvc_pull
+        continue-on-error: true
         env:
-          DAGSHUB_ACCESS_KEY_ID: ${{ secrets.DAGSHUB_ACCESS_KEY_ID }}
-          DAGSHUB_SECRET_ACCESS_KEY: ${{ secrets.DAGSHUB_SECRET_ACCESS_KEY }}
+          DVC_S3_ENDPOINT_URL: ${{ secrets.DVC_S3_ENDPOINT_URL }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: bash scripts/dvc_pull_models.sh
+
+      - name: Create stub model when MinIO/DVC is unavailable
+        if: steps.dvc_pull.outcome != 'success'
+        run: |
+          echo "::warning::DVC pull failed; building API image with stub model."
+          echo "::warning::Use a reachable MinIO endpoint in secrets for production images."
+          uv run --group dev --no-sync python scripts/create_stub_model.py
+
+      - name: Verify model artifacts for Docker build
+        run: |
+          test -f models/emotion_classifier/config.json
+          test -f models/emotion_classifier/tokenizer_config.json
 
       - uses: docker/setup-buildx-action@v3
 
@@ -43,21 +60,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=sha
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and push Docker image
+      - name: Build and push API image
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:api-latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:api-${{ github.sha }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: frontend
+          file: frontend/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:frontend-latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:frontend-${{ github.sha }}
+
+      - name: Build and push MLflow image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.mlflow
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:mlflow-latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:mlflow-${{ github.sha }}

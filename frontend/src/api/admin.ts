@@ -1,5 +1,9 @@
 import { API_V1_PREFIX, apiClient } from '@/api/client'
-import type { AdminPredictionsResponse, DriftSnapshotResponse } from '@/api/types'
+import type {
+  AdminPredictionsResponse,
+  DriftSnapshotResponse,
+  RetrainStatusResponse,
+} from '@/api/types'
 
 export interface AdminMetrics {
   accuracy: number | null
@@ -14,8 +18,18 @@ export async function getAdminMetrics(): Promise<AdminMetrics> {
   return data
 }
 
-export async function startRetrain(): Promise<void> {
-  await apiClient.post(`${API_V1_PREFIX}/admin/retrain`)
+export async function startRetrain(): Promise<RetrainStatusResponse> {
+  const { data } = await apiClient.post<RetrainStatusResponse>(
+    `${API_V1_PREFIX}/admin/retrain`,
+  )
+  return data
+}
+
+export async function getRetrainStatus(): Promise<RetrainStatusResponse> {
+  const { data } = await apiClient.get<RetrainStatusResponse>(
+    `${API_V1_PREFIX}/admin/retrain`,
+  )
+  return data
 }
 
 export async function getAdminPredictions(

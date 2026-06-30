@@ -22,3 +22,9 @@ models
 !models/emotion_classifier
 !models/emotion_classifier/**
 models/emotion_classifier/checkpoint-*
+
+# Retraining dataset needed inside API image.
+!data
+!data/processed
+!data/processed/empatheticdialogues
+!data/processed/empatheticdialogues/**
