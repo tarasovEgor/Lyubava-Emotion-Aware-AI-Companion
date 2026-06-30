@@ -29,11 +29,25 @@ jobs:
         run: bash scripts/ci_install_deps.sh --group dev
 
       - name: Pull trained model from DVC (MinIO)
+        id: dvc_pull
+        continue-on-error: true
         env:
           DVC_S3_ENDPOINT_URL: ${{ secrets.DVC_S3_ENDPOINT_URL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: bash scripts/dvc_pull_models.sh
+
+      - name: Create stub model when MinIO/DVC is unavailable
+        if: steps.dvc_pull.outcome != 'success'
+        run: |
+          echo "::warning::DVC pull failed; building API image with stub model."
+          echo "::warning::Use a reachable MinIO endpoint in secrets for production images."
+          uv run --group dev --no-sync python scripts/create_stub_model.py
+
+      - name: Verify model artifacts for Docker build
+        run: |
+          test -f models/emotion_classifier/config.json
+          test -f models/emotion_classifier/tokenizer_config.json
 
       - uses: docker/setup-buildx-action@v3
 
