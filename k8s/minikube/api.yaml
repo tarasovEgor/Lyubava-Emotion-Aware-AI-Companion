@@ -41,8 +41,6 @@ spec:
             - name: http
               containerPort: 8000
           envFrom:
-            - configMapRef:
-                name: lyubava-config
             - secretRef:
                 name: lyubava-secrets
           startupProbe:
