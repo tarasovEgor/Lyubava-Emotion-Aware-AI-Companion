@@ -1,5 +1,5 @@
 import { API_V1_PREFIX, apiClient } from '@/api/client'
-import type { AdminPredictionsResponse } from '@/api/types'
+import type { AdminPredictionsResponse, DriftSnapshotResponse } from '@/api/types'
 
 export interface AdminMetrics {
   accuracy: number | null
@@ -26,6 +26,13 @@ export async function getAdminPredictions(
     {
       params: { limit },
     },
+  )
+  return data
+}
+
+export async function getDriftSnapshot(): Promise<DriftSnapshotResponse> {
+  const { data } = await apiClient.get<DriftSnapshotResponse>(
+    `${API_V1_PREFIX}/monitoring/drift`,
   )
   return data
 }
