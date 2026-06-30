@@ -129,3 +129,16 @@ Lyubava exposes monitoring endpoints for Prometheus scraping and drift visibilit
 - Drift snapshot: `http://localhost:8000/v1/monitoring/drift`
 - Prometheus UI: `http://localhost:9090`
 - Grafana UI: `http://localhost:3000`
+
+## Minikube
+
+Local Kubernetes manifests live in `k8s/minikube`.
+
+```powershell
+minikube image build -t lyubava-api:latest -f Dockerfile .
+minikube image build -t lyubava-mlflow:latest -f Dockerfile.mlflow .
+minikube image build -t lyubava-frontend:latest -f frontend/Dockerfile frontend
+kubectl apply -k k8s/minikube
+```
+
+See `docs/minikube.md` for ports, secrets, rollout checks, and cleanup commands.

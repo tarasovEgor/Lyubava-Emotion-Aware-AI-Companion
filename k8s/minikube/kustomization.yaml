@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: lyubava
+
+resources:
+  - namespace.yaml
+  - app-config.yaml
+  - secrets.yaml
+  - postgres.yaml
+  - minio.yaml
+  - mlflow.yaml
+  - api.yaml
+  - frontend.yaml
+  - monitoring.yaml
+
+configMapGenerator:
+  - name: prometheus-config
+    files:
+      - prometheus.yml=config/prometheus/prometheus.yml
+  - name: grafana-datasource
+    files:
+      - datasource.yml=config/grafana/provisioning/datasources/datasource.yml
+  - name: grafana-dashboard-provider
+    files:
+      - dashboards.yml=config/grafana/provisioning/dashboards/dashboards.yml
+  - name: grafana-dashboard-lyubava
+    files:
+      - lyubava-drift.json=config/grafana/dashboards/lyubava-drift.json

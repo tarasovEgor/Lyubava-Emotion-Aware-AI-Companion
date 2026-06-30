@@ -21,3 +21,4 @@ models
 !models
 !models/emotion_classifier
 !models/emotion_classifier/**
+models/emotion_classifier/checkpoint-*
