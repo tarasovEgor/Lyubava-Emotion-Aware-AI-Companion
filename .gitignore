@@ -8,7 +8,8 @@ Thumbs.db
 *.swp
 *.swo
 
-# /src/lyubava/models
+# Track model artifacts with DVC instead of Git
+/models/
 
 # =========================
 # Logs
@@ -58,6 +59,7 @@ pip-wheel-metadata/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+tests/fixtures/processed/
 .tox/
 .coverage
 coverage.xml
@@ -118,3 +120,5 @@ secrets.json
 *.bak
 *.tmp
 # /data
+/models
+.worktrees/

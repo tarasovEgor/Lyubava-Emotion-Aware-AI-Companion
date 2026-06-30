@@ -1,0 +1,11 @@
+raw_dir: tests/fixtures/raw
+processed_dir: tests/fixtures/processed
+
+splits:
+  train: train.csv
+  valid: valid.csv
+  test: test.csv
+
+text_column: utterance
+source_label_column: context
+target_label_column: emotion

@@ -5,16 +5,26 @@ description = "MLOps starter"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "datasets>=4.8.4",
+    "accelerate>=1.13.0",
+    "boto3>=1.42.0",
+    "datasets",
     "dvc-gdrive>=3.0.1",
     "dvc-s3>=3.3.0",
     "dvc[gdrive]>=3.67.1",
     "evaluate>=0.4.6",
     "fastapi>=0.136.1",
+    "langchain-core>=1.4.0",
+    "langchain-openai>=1.2.2",
+    "mlflow",
     "numpy>=2.4.4",
-    "pandas>=3.0.1",
+    "pandas<3.0.0",
+    "prometheus-client>=0.23.1",
+    "psycopg2-binary>=2.9.11",
+    "python-dotenv>=1.2.2",
+    "pyyaml>=6.0.3",
     "scikit-learn>=1.8.0",
-    "transformers[torch]>=5.5.4",
+    "torch==2.11.0+cu128",
+    "transformers>=5.5.4",
     "uvicorn[standard]>=0.46.0",
 ]
 
@@ -25,8 +35,30 @@ project = "lyubava.cli:main"
 requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cu128"
+
 [dependency-groups]
 dev = [
+    "black>=25.1.0",
     "httpx>=0.28.1",
+    "pre-commit>=4.2.0",
     "pytest>=9.0.2",
+    "ruff>=0.11.0",
 ]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B008", "E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

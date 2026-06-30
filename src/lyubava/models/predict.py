@@ -25,14 +25,13 @@ class EmotionPredictor:
         self.device = torch.device(device)
 
         self.tokenizer = AutoTokenizer.from_pretrained(str(self.model_dir))
-        self.model = AutoModelForSequenceClassification.from_pretrained(str(self.model_dir))
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            str(self.model_dir)
+        )
         self.model.to(self.device)
         self.model.eval()
 
-        self.id2label = {
-            int(k): str(v)
-            for k, v in self.model.config.id2label.items()
-        }
+        self.id2label = {int(k): str(v) for k, v in self.model.config.id2label.items()}
 
     def predict(self, text: str) -> dict[str, Any]:
         if not isinstance(text, str) or not text.strip():
@@ -46,20 +45,22 @@ class EmotionPredictor:
             max_length=self.max_length,
         )
 
-        inputs = {
-            key: value.to(self.device)
-            for key, value in inputs.items()
-        }
+        inputs = {key: value.to(self.device) for key, value in inputs.items()}
 
         with torch.no_grad():
             outputs = self.model(**inputs)
             probabilities = torch.softmax(outputs.logits, dim=-1)[0]
 
         confidence, predicted_id = torch.max(probabilities, dim=-1)
+        probability_distribution = {
+            self.id2label.get(index, str(index)): round(float(score), 4)
+            for index, score in enumerate(probabilities.tolist())
+        }
 
         return {
             "emotion": self.id2label[int(predicted_id.item())],
             "confidence": round(float(confidence.item()), 4),
+            "probabilities": probability_distribution,
         }
 
     def predict_batch(self, texts: list[str]) -> list[dict[str, Any]]:

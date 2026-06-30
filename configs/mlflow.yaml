@@ -1,0 +1,41 @@
+tracking_uri: http://localhost:5000
+experiment_name: lyubava-emotion-classifier
+artifact_location: s3://lyubava-mlflow-artifacts
+
+run:
+  name_prefix: emotion-classifier
+  tags:
+    project: Lyubava-Emotion-Aware-AI-Companion
+    task: emotion-classification
+    framework: transformers
+
+artifacts:
+  model_artifact_path: model
+  log_output_dir: true
+  log_data_stats: true
+  log_dvc_file: true
+
+s3:
+  enabled: true
+  endpoint_url_env_var: MLFLOW_S3_ENDPOINT_URL
+  bucket_auto_create: true
+  required_env_vars:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+  optional_env_vars:
+    - AWS_DEFAULT_REGION
+    - AWS_REGION
+    - MLFLOW_S3_ENDPOINT_URL
+    - AWS_ENDPOINT_URL
+
+model_registry:
+  enabled: true
+  registered_model_name: lyubava-emotion-classifier
+  await_registration_for: 300
+  stage: null
+  aliases:
+    champion: true
+  tags:
+    domain: nlp
+    model_type: sequence-classification
+    dataset: empatheticdialogues

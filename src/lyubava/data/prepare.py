@@ -67,9 +67,7 @@ def process_split(
     missing_columns = required_columns - set(df.columns)
 
     if missing_columns:
-        raise ValueError(
-            f"Missing columns in {input_path}: {sorted(missing_columns)}"
-        )
+        raise ValueError(f"Missing columns in {input_path}: {sorted(missing_columns)}")
 
     df = df[[text_column, source_label_column]].copy()
 

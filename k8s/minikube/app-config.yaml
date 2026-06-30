@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lyubava-config
+data:
+  MODEL_DIR: /app/models/emotion_classifier
+  DRIFT_BASELINE_PATH: /app/monitoring/baselines/drift-baseline.json
+  DRIFT_WINDOW_SIZE: "500"
+  DRIFT_MIN_SAMPLES: "100"
+  PREDICTIONS_FEED_MAX_ITEMS: "500"
+  CHAT_TEMPERATURE: "0.7"
+  OPENROUTER_BASE_URL: https://openrouter.ai/api/v1
+  OPENROUTER_MODEL: openai/gpt-oss-120b
+  POSTGRES_DB: mlflow
+  POSTGRES_USER: mlflow
+  MLFLOW_S3_BUCKET: lyubava-mlflow-artifacts
+  AWS_DEFAULT_REGION: us-east-1
+  MLFLOW_TRACKING_URI: http://mlflow:5000
+  MLFLOW_S3_ENDPOINT_URL: http://minio:9000
