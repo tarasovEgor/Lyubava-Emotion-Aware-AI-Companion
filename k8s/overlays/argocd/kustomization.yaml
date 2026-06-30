@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../minikube
+
+images:
+  - name: lyubava-api
+    newName: ghcr.io/tarasovEgor/lyubava-emotion-aware-ai-companion
+    newTag: api-latest
+  - name: lyubava-frontend
+    newName: ghcr.io/tarasovEgor/lyubava-emotion-aware-ai-companion
+    newTag: frontend-latest
+  - name: lyubava-mlflow
+    newName: ghcr.io/tarasovEgor/lyubava-emotion-aware-ai-companion
+    newTag: mlflow-latest
+
+patches:
+  - path: patches/ghcr-image-pull.yaml

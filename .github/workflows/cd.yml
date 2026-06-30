@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
     tags: ["v*"]
 
 permissions:
@@ -43,21 +43,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=sha
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and push Docker image
+      - name: Build and push API image
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:api-latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:api-${{ github.sha }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: frontend
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:frontend-latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:frontend-${{ github.sha }}
+
+      - name: Build and push MLflow image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.mlflow
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:mlflow-latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:mlflow-${{ github.sha }}
